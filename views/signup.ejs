@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .signup-box {
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="signup-box">
+                    <h2 class="text-center mb-4">Sign Up</h2>
+                    <!-- Add email field and success message -->
+                    <form id="signupForm" action="/signup" method="POST">
+                        <div class="form-group">
+                            <label for="firstName">First Name:</label>
+                            <input type="text" class="form-control" id="firstName" name="name"
+                                placeholder="Enter first name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name:</label>
+                            <input type="text" class="form-control" id="lastName" name="lastName"
+                                placeholder="Enter last name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password:</label>
+                            <input type="password" class="form-control" id="password" name="password"
+                                placeholder="Enter password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">Date of Birth:</label>
+                            <input type="date" class="form-control" id="dob" name="dob" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                    </form>
+
+                    <!-- Add a div to display validation errors -->
+                    <div id="validation-errors" class="alert alert-danger mt-3" role="alert" style="display: none;"></div>
+
+                    <!-- Display success message -->
+                    <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+                        <div class="alert alert-danger">
+                          <ul>
+                            <% errors.forEach(error => { %>
+                              <li><%= error.msg %></li>
+                            <% }); %>
+                          </ul>
+                        </div>
+                      <% } else if (typeof errorMessage !== 'undefined') { %>
+                        <div class="alert alert-danger">
+                          <%= errorMessage %>
+                        </div>
+                      <% } else if (typeof successMessage !== 'undefined') { %>
+                        <div class="alert alert-success">
+                          <%= successMessage %>
+                          <!-- Add a link to go back to the login page -->
+                          <p>Go back to <a href="/">login</a>.</p>
+                        </div>
+                      <% } %>
+                      
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const signupForm = document.getElementById('signupForm');
+            const validationErrorsContainer = document.getElementById('validation-errors');
+
+            signupForm.addEventListener('input', async (event) => {
+                if (event.target.tagName === 'INPUT') {
+                    const formData = new FormData(signupForm);
+                    const response = await fetch('/validateSignup', {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    if (response.ok) {
+                        const errors = await response.json();
+                        displayErrors(errors);
+                    } else {
+                        console.error('Failed to validate form:', response.statusText);
+                    }
+                }
+            });
+
+            function displayErrors(errors) {
+                // Clear previous errors
+                validationErrorsContainer.innerHTML = '';
+
+                if (errors && errors.length > 0) {
+                    validationErrorsContainer.style.display = 'block';
+
+                    errors.forEach(error => {
+                        const errorElement = document.createElement('div');
+                        errorElement.textContent = error.msg;
+                        validationErrorsContainer.appendChild(errorElement);
+                    });
+                } else {
+                    validationErrorsContainer.style.display = 'none';
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

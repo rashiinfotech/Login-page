@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Title Here</title>
+    <style>
+        body {
+            background-image: url("/views/background-img.png");
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        #adminButton {
+            background-color: #0056b3;
+            color: #ffffff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            position: fixed;
+            top: 10px;
+            right: 10px;
+        }
+
+        #adminButton:hover {
+            background-color: #00274d;
+        }
+
+        form {
+            background-color: #807171;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        header {
+            color: #ffffff;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .signup-text {
+            color: #ffffff;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+            margin-right: 5px;
+        }
+
+        a.signup-button {
+            text-decoration: none;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #0056b3;
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        a.signup-button:hover {
+            background-color: #00274d;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>User Login</h1>
+        </header>
+
+        <!-- Admin Button -->
+        <button id="adminButton" onclick="redirectToAdminLogin()">Admin Login</button>
+
+        <form id="userLoginForm" action="/login" method="POST">
+            <label for="userEmail">Email</label>
+            <input type="email" id="userEmail" name="email" required />
+
+            <label for="userPassword">Password</label>
+            <input type="password" id="userPassword" name="password" required />
+
+            <button type="submit">Login</button>
+        </form>
+
+        <p class="signup-text">Didn't have an account?</p>
+        <a href="/signup" class="signup-button">Sign Up</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const userLoginForm = document.getElementById('userLoginForm');
+      
+          userLoginForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+      
+            const enteredUsername = document.getElementById('userEmail').value;
+            const enteredPassword = document.getElementById('userPassword').value;
+      
+            try {
+              const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  email: enteredUsername,
+                  password: enteredPassword,
+                }),
+              });
+      
+              const responseData = await response.json();
+      
+              if (response.ok) {
+                // Redirect to the dashboard upon successful login
+                window.location.href = "/dashboard";
+              } else {
+                alert(responseData.error || "Invalid credentials");
+              }
+            } catch (error) {
+              console.error('Error during login:', error);
+              alert('An error occurred during login');
+            }
+          });
+        });
+      
+        function redirectToAdminLogin() {
+          window.location.href = "/adminLogin";
+        }
+      </script>
+      
+</body>
+
+</html>

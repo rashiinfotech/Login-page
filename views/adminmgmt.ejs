@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h2 {
+            color: #3498db;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #2ecc71;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        td {
+            border: none;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+        }
+
+        td:last-child {
+            border-bottom: none;
+        }
+
+        a {
+            text-decoration: none;
+            padding: 5px 10px;
+            background-color: #3498db;
+            color: #fff;
+            border-radius: 3px;
+            margin-right: 5px;
+        }
+
+        .logout-container {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+        }
+
+        .logout-link {
+            text-decoration: none;
+            padding: 5px 10px;
+            background-color: #e74c3c;
+            color: #fff;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h2>User Management</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Serial No</th>
+                <th>Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Date of Birth</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach((user, index) => { %>
+                <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= user.name %></td>
+                    <td><%= user.lastName %></td>
+                    <td><%= user.email %></td>
+                    <td><%= user.dob %></td>
+                    <!-- Display "Admin" if user.isAdmin is true, otherwise display "User" -->
+                    <td><%= user.isAdmin ? "Admin" : "User" %></td>
+                    <td>
+                        <a href="/admin/edit/<%= user._id %>" method="POST">Edit</a>
+                        <a href="/admin/delete/<%= user._id %>" method="POST">Remove</a>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+
+    <!-- Logout link container -->
+    <div class="logout-container">
+        <a class="logout-link" href="/logoutAdmin">Logout</a>
+    </div>
+
+    <!-- Add User link -->
+    <a href="/admin/add" method="POST">Add User</a>
+</body>
+</html>
